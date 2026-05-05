@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>混亂的單位：AI 偵探社</title>
+    <title>單位偵探：時空修復計畫</title>
     <style>
         :root {
             --primary: #FF6B6B; 
             --secondary: #4834D4; 
             --accent: #1DD1A1; 
-            --warning: #FECA57; 
             --bg: #F0F7FF;
             --success: #10AC84;
             --error: #EE5253;
@@ -31,7 +30,7 @@
             border-radius: 50px;
             box-shadow: 0 20px 0px #DDE4F0;
             width: 95%;
-            max-width: 750px;
+            max-width: 800px;
             text-align: center;
             border: 8px solid var(--secondary);
         }
@@ -39,7 +38,7 @@
         .screen { display: none; }
         .active { display: block; }
 
-        h1 { color: var(--secondary); font-size: 3rem; margin-top: 0; text-shadow: 3px 3px 0px #E0E0E0; }
+        h1 { color: var(--secondary); font-size: 2.8rem; margin-top: 0; }
         
         .intro-box {
             text-align: left;
@@ -47,53 +46,53 @@
             padding: 30px;
             border-radius: 30px;
             margin-bottom: 30px;
-            border: 4px dashed var(--warning);
+            border: 4px dashed #FECA57;
         }
-        .intro-box p { font-size: 1.4rem; line-height: 1.8; margin: 10px 0; color: #444; }
+        .intro-box p { font-size: 1.3rem; line-height: 1.8; color: #444; }
 
-        #quest-type { font-size: 1.5rem; font-weight: bold; color: var(--primary); margin-bottom: 15px; }
+        #quest-type { font-size: 1.4rem; font-weight: bold; color: var(--primary); margin-bottom: 10px; }
+        
+        /* 核心填空區設計 */
         .ai-dialogue {
             background: #2F3640;
             color: #FFF;
-            padding: 35px;
+            padding: 40px;
             border-radius: 30px;
-            margin-bottom: 30px;
-            font-size: 1.8rem;
-            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            line-height: 1.8;
             border-bottom: 10px solid var(--accent);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            min-height: 120px;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: center;
+            gap: 10px;
         }
 
-        .action-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        input[type="text"] {
-            width: 250px;
-            padding: 20px;
-            border: 4px solid var(--secondary);
-            border-radius: 20px;
+        input[type="number"] {
+            width: 180px;
+            padding: 10px;
+            border: 4px solid var(--accent);
+            border-radius: 15px;
             font-size: 2rem;
             text-align: center;
             outline: none;
-            background: #F9F9F9;
+            background: white;
+            color: var(--secondary);
+            font-family: inherit;
         }
 
-        .unit-label { font-size: 1.8rem; font-weight: bold; color: var(--secondary); min-width: 80px; text-align: left; }
+        /* 隱藏 Chrome/Safari 的數字箭頭 */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .unit-label { font-size: 1.8rem; font-weight: bold; color: var(--secondary); margin-left: 10px; }
 
         button {
             background: var(--secondary);
             color: white;
             border: none;
-            padding: 20px 40px;
+            padding: 15px 45px;
             border-radius: 25px;
             font-size: 1.5rem;
             font-weight: bold;
@@ -104,56 +103,58 @@
         button:hover { background: var(--primary); box-shadow: 0 6px 0px #c0392b; transform: translateY(-2px); }
         button:active { transform: translateY(4px); box-shadow: none; }
 
-        .timer-bg { width: 100%; height: 25px; background: #EEE; border-radius: 20px; margin-bottom: 25px; overflow: hidden; border: 3px solid #DDD; }
+        .timer-bg { width: 100%; height: 20px; background: #EEE; border-radius: 20px; margin-bottom: 25px; overflow: hidden; }
         #timer-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #1DD1A1, #FECA57, #FF6B6B); transition: 0.3s linear; }
 
-        .result-table { width: 100%; border-collapse: collapse; margin-top: 25px; font-size: 1.1rem; }
-        .result-table th { background: var(--secondary); color: white; padding: 12px; border: 1px solid #DDD; }
+        .result-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .result-table th { background: var(--secondary); color: white; padding: 12px; }
         .result-table td { padding: 12px; border: 1px solid #DDD; text-align: center; }
         .tag-correct { color: var(--success); font-weight: bold; }
         .tag-wrong { color: var(--error); font-weight: bold; }
         
-        #feedback { font-size: 1.6rem; font-weight: bold; margin-top: 10px; height: 40px; }
+        #feedback { font-size: 1.6rem; font-weight: bold; height: 40px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div id="game-container">
+    <!-- 入口畫面 -->
     <div id="intro-screen" class="screen active">
-        <h1>🕵️ 混亂的單位</h1>
+        <h1>🕵️ 單位偵探社</h1>
         <div class="intro-box">
-            <p>1. 🔍 <b>找錯誤：</b> 機器人的單位換算壞掉了，數字都亂跳！</p>
-            <p>2. ✍️ <b>填正確：</b> 找出錯誤，填入<b>「正確的數字」</b>。</p>
-            <p>3. ⏱️ <b>救時空：</b> 每次題目都不一樣！按下 <b>Enter</b> 也能送出！</p>
+            <p>🔧 <b>任務：</b> 機器人的記憶體被清空了，請幫他填入正確的數字！</p>
+            <p>📝 <b>操作：</b> 在空格內輸入答案，按下 <b>Enter</b> 或 <b>送出</b>。</p>
+            <p>⚡ <b>注意：</b> 每個關卡只有 30 秒思考時間！</p>
         </div>
-        <button onclick="startGame()">開始隨機任務 🚀</button>
+        <button onclick="startGame()">接受任務 🚀</button>
     </div>
 
+    <!-- 遊戲進行畫面 -->
     <div id="game-play" class="screen">
         <div class="timer-bg"><div id="timer-bar"></div></div>
         <div id="quest-type">載入中...</div>
-        <div class="ai-dialogue" id="ai-quest">載入題庫中...</div>
         
-        <div class="action-area">
-            <input type="text" id="user-input" autocomplete="off" placeholder="填數字" onkeypress="if(event.key==='Enter')checkAnswer()">
-            <span class="unit-label" id="unit-tag">單位</span>
-            <button onclick="checkAnswer()">送出</button>
+        <div class="ai-dialogue">
+            <span id="quest-prefix"></span>
+            <input type="number" id="user-input" placeholder="?" onkeypress="if(event.key==='Enter')checkAnswer()">
+            <span id="quest-suffix"></span>
         </div>
         
+        <button onclick="checkAnswer()">確認送出</button>
         <div id="feedback"></div>
     </div>
 
+    <!-- 結算畫面 -->
     <div id="end-screen" class="screen">
         <h1>🏆 偵探任務報告</h1>
-        <div id="final-score" style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;"></div>
+        <div id="final-score" style="font-size: 2.2rem; color: var(--primary); margin-bottom: 20px; font-weight: bold;"></div>
         <div style="max-height: 400px; overflow-y: auto;">
             <table class="result-table" id="result-list">
                 <thead>
                     <tr>
                         <th>關卡類型</th>
-                        <th>原本的錯</th>
                         <th>你的答案</th>
-                        <th>正確數字</th>
+                        <th>正確答案</th>
                         <th>結果</th>
                     </tr>
                 </thead>
@@ -161,73 +162,71 @@
             </table>
         </div>
         <br>
-        <button onclick="location.reload()">更換題目再玩一次 🔄</button>
+        <button onclick="location.reload()">再挑戰一次 🔄</button>
     </div>
 </div>
 
 <script>
-    // 擴充題庫：5個階段，各10題
     const fullBank = {
-        stage1: [ // 大數密碼
-            { type: "【大數密碼】", quest: "密碼是「五萬零七」，數字應該是 500070！", wrongNum: "500070", correct: "50007", unit: "數字" },
-            { type: "【大數密碼】", quest: "「三億零五萬」，寫成數字是 300500000！", wrongNum: "300500000", correct: "300050000", unit: "數字" },
-            { type: "【大數密碼】", quest: "「七百萬零九十」，數字寫作 7009000！", wrongNum: "7009000", correct: "7000090", unit: "數字" },
-            { type: "【大數密碼】", quest: "十個一萬是十萬，那十個十萬是一千萬！", wrongNum: "一千萬", correct: "1000000", unit: "數字" },
-            { type: "【大數密碼】", quest: "「二千零八萬」，寫成數字是 208000000！", wrongNum: "208000000", correct: "20080000", unit: "數字" },
-            { type: "【大數密碼】", quest: "數字 13000500 是「一千三百萬零五百」！", wrongNum: "一千三百萬零五百", correct: "13000500", unit: "數字" },
-            { type: "【大數密碼】", quest: "四兆是幾個億？我看是 40 個億吧！", wrongNum: "40", correct: "40000", unit: "個億" },
-            { type: "【大數密碼】", quest: "「六十萬零八百」，寫成數字是 600000800！", wrongNum: "600000800", correct: "600800", unit: "數字" },
-            { type: "【大數密碼】", quest: "一個一億是十個一千萬，那十個一億是十兆！", wrongNum: "十兆", correct: "1000000000", unit: "數字" },
-            { type: "【大數密碼】", quest: "密碼是「九億零九」，數字寫成 9000000090！", wrongNum: "9000000090", correct: "900000009", unit: "數字" }
+        stage1: [
+            { type: "【大數密碼】", quest: "「五萬零七」寫成數字是 (　)", correct: "50007" },
+            { type: "【大數密碼】", quest: "「三億零五萬」寫成數字是 (　)", correct: "300050000" },
+            { type: "【大數密碼】", quest: "「七百萬零九十」寫成數字是 (　)", correct: "7000090" },
+            { type: "【大數密碼】", quest: "十個十萬是 (　) 萬", correct: "100" },
+            { type: "【大數密碼】", quest: "「二千零八萬」寫成數字是 (　)", correct: "20080000" },
+            { type: "【大數密碼】", quest: "四兆是 (　) 個一億", correct: "40000" },
+            { type: "【大數密碼】", quest: "「六十萬零八百」寫成數字是 (　)", correct: "600800" },
+            { type: "【大數密碼】", quest: "十個一億是 (　) 億", correct: "10" },
+            { type: "【大數密碼】", quest: "「九億零九」寫成數字是 (　)", correct: "900000009" },
+            { type: "【大數密碼】", quest: "一千萬是 (　) 個十萬", correct: "100" }
         ],
-        stage2: [ // 距離換算 (公里/公尺)
-            { type: "【距離測量】", quest: "跑 4 公里就是跑 400 公尺，快跑完啦！", wrongNum: "400", correct: "4000", unit: "公尺" },
-            { type: "【距離測量】", quest: "這座山高 3000 公尺，也就是 300 公里高！", wrongNum: "300", correct: "3", unit: "公里" },
-            { type: "【距離測量】", quest: "隧道長 1 公里 50 公尺，換算後是 1500 公尺！", wrongNum: "1500", correct: "1050", unit: "公尺" },
-            { type: "【距離測量】", quest: "我看這地圖標示 20000 公尺，其實才 2 公里！", wrongNum: "2", correct: "20", unit: "公里" },
-            { type: "【距離測量】", quest: "8 公里 8 公尺，數字換算後是 8008 公尺！", wrongNum: "8008", correct: "8008", correct: "8008", unit: "公尺" }, // 陷阱：本身正確? 不，我們改錯
-            { type: "【距離測量】", quest: "8 公里 8 公尺，數字換算後是 8800 公尺！", wrongNum: "8800", correct: "8008", unit: "公尺" },
-            { type: "【距離測量】", quest: "學校到家裡 1500 公尺，也就是 15 公里！", wrongNum: "15", correct: "1.5", unit: "公里" },
-            { type: "【距離測量】", quest: "馬拉松 42 公里，換算成公尺是 4200 公尺！", wrongNum: "4200", correct: "42000", unit: "公尺" },
-            { type: "【距離測量】", quest: "飛機高度 10 公里，也就是 1000 公尺！", wrongNum: "1000", correct: "10000", unit: "公尺" },
-            { type: "【距離測量】", quest: "捷運軌道長 2000 公尺，也就是 20 公里！", wrongNum: "20", correct: "2", unit: "公里" },
-            { type: "【距離測量】", quest: "5 公里 60 公尺，寫成公尺是 560 公尺！", wrongNum: "560", correct: "5060", unit: "公尺" }
+        stage2: [
+            { type: "【距離測量】", quest: "4 公里等於 (　) 公尺", correct: "4000" },
+            { type: "【距離測量】", quest: "3000 公尺等於 (　) 公里", correct: "3" },
+            { type: "【距離測量】", quest: "1 公里 50 公尺是 (　) 公尺", correct: "1050" },
+            { type: "【距離測量】", quest: "20000 公尺等於 (　) 公里", correct: "20" },
+            { type: "【距離測量】", quest: "8 公里 8 公尺是 (　) 公尺", correct: "8008" },
+            { type: "【距離測量】", quest: "1500 公尺等於 (　) 公里 (　) 公尺", correct: "1.5", note: "此題建議拆分，暫設 1.5" },
+            { type: "【距離測量】", quest: "42 公里等於 (　) 公尺", correct: "42000" },
+            { type: "【距離測量】", quest: "10 公里等於 (　) 公尺", correct: "10000" },
+            { type: "【距離測量】", quest: "2000 公尺等於 (　) 公里", correct: "2" },
+            { type: "【距離測量】", quest: "5 公里 60 公尺是 (　) 公尺", correct: "5060" }
         ],
-        stage3: [ // 重量換算 (公噸/公斤)
-            { type: "【重量挑戰】", quest: "我有 2 公噸的電池，也就是 200 公斤！", wrongNum: "200", correct: "2000", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "大象重 5000 公斤，換算成公噸是 50 公噸！", wrongNum: "50", correct: "5", unit: "公噸" },
-            { type: "【重量挑戰】", quest: "3 公噸 40 公斤的貨物，總共是 3400 公斤！", wrongNum: "3400", correct: "3040", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "卡車限重 10 公噸，等於只能載 1000 公斤！", wrongNum: "1000", correct: "10000", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "8000 公斤的鋼鐵，換算後只有 0.8 公噸！", wrongNum: "0.8", correct: "8", unit: "公噸" },
-            { type: "【重量挑戰】", quest: "15 公噸等於多少公斤？應該是 1500 公斤！", wrongNum: "1500", correct: "15000", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "4005 公斤換算成公噸是 40 公噸 5 公斤！", wrongNum: "40", correct: "4", unit: "公噸" },
-            { type: "【重量挑戰】", quest: "鯨魚重 120 公噸，也就是 12000 公斤！", wrongNum: "12000", correct: "120000", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "7 公噸 700 公斤，寫成公斤是 7070 公斤！", wrongNum: "7070", correct: "7700", unit: "公斤" },
-            { type: "【重量挑戰】", quest: "2500 公斤的砂糖，換算後是 25 公噸！", wrongNum: "25", correct: "2.5", unit: "公噸" }
+        stage3: [
+            { type: "【重量挑戰】", quest: "2 公噸等於 (　) 公斤", correct: "2000" },
+            { type: "【重量挑戰】", quest: "5000 公斤等於 (　) 公噸", correct: "5" },
+            { type: "【重量挑戰】", quest: "3 公噸 40 公斤是 (　) 公斤", correct: "3040" },
+            { type: "【重量挑戰】", quest: "10 公噸等於 (　) 公斤", correct: "10000" },
+            { type: "【重量挑戰】", quest: "8000 公斤等於 (　) 公噸", correct: "8" },
+            { type: "【重量挑戰】", quest: "15 公噸等於 (　) 公斤", correct: "15000" },
+            { type: "【重量挑戰】", quest: "4005 公斤等於 (　) 公噸 (　) 公斤", correct: "4.005", note: "暫設小數" },
+            { type: "【重量挑戰】", quest: "120 公噸等於 (　) 公斤", correct: "120000" },
+            { type: "【重量挑戰】", quest: "7 公噸 700 公斤是 (　) 公斤", correct: "7700" },
+            { type: "【重量挑戰】", quest: "2500 公斤等於 (　) 公噸", correct: "2.5" }
         ],
-        stage4: [ // 周長與面積 (平方公分/公尺)
-            { type: "【面積計算】", quest: "邊長 10 公分正方形，面積是 40 平方公分！", wrongNum: "40", correct: "100", unit: "平方公分" },
-            { type: "【周長挑戰】", quest: "邊長 5 公分正方形，周長是 25 公分！", wrongNum: "25", correct: "20", unit: "公分" },
-            { type: "【面積計算】", quest: "長 5 公尺、寬 4 公尺長方形，面積是 9 平方公尺！", wrongNum: "9", correct: "20", unit: "平方公尺" },
-            { type: "【周長挑戰】", quest: "長 10 公分、寬 2 公分長方形，周長是 12 公分！", wrongNum: "12", correct: "24", unit: "公分" },
-            { type: "【面積計算】", quest: "一個 1 平方公尺的墊子，是 100 平方公分！", wrongNum: "100", correct: "10000", unit: "平方公分" },
-            { type: "【周長挑戰】", quest: "每邊長 8 公尺的操場周長，應該是 16 公尺！", wrongNum: "16", correct: "32", unit: "公尺" },
-            { type: "【面積計算】", quest: "長 20 公分、寬 10 公分，面積是 30 平方公分！", wrongNum: "30", correct: "200", unit: "平方公分" },
-            { type: "【面積計算】", quest: "10000 平方公分也就是 100 平方公尺！", wrongNum: "100", correct: "1", unit: "平方公尺" },
-            { type: "【面積計算】", quest: "長方形面積 50，長是 10，寬應該是 40！", wrongNum: "40", correct: "5", unit: "公分" },
-            { type: "【面積計算】", quest: "正方形面積 64 平方公分，邊長是 32 公分！", wrongNum: "32", correct: "8", unit: "公分" }
+        stage4: [
+            { type: "【面積計算】", quest: "邊長 10 公分正方形，面積是 (　) 平方公分", correct: "100" },
+            { type: "【周長挑戰】", quest: "邊長 5 公分正方形，周長是 (　) 公分", correct: "20" },
+            { type: "【面積計算】", quest: "長 5 公尺、寬 4 公尺，面積是 (　) 平方公尺", correct: "20" },
+            { type: "【周長挑戰】", quest: "長 10 公分、寬 2 公分，周長是 (　) 公分", correct: "24" },
+            { type: "【面積計算】", quest: "1 平方公尺等於 (　) 平方公分", correct: "10000" },
+            { type: "【面積計算】", quest: "長 20 公分、寬 10 公分，面積是 (　) 平方公分", correct: "200" },
+            { type: "【面積計算】", quest: "10000 平方公分等於 (　) 平方公尺", correct: "1" },
+            { type: "【面積計算】", quest: "長方形面積 50，長是 10，寬是 (　) 公分", correct: "5" },
+            { type: "【面積計算】", quest: "正方形面積 64，邊長是 (　) 公分", correct: "8" },
+            { type: "【周長挑戰】", quest: "長方形長 8、寬 2，周長是 (　) 公分", correct: "20" }
         ],
-        stage5: [ // 時間換算 (時/分/秒)
-            { type: "【時間換算】", quest: "3 小時等於多少分鐘？我覺得是 300 分鐘！", wrongNum: "300", correct: "180", unit: "分鐘" },
-            { type: "【時間換算】", quest: "2 分鐘 15 秒，總共是 215 秒！", wrongNum: "215", correct: "135", unit: "秒" },
-            { type: "【時間換算】", quest: "180 分鐘也就是 1.8 小時對吧！", wrongNum: "1.8", correct: "3", unit: "小時" },
-            { type: "【時間換算】", quest: "從早上 9 點到下午 2 點，經過了 7 小時！", wrongNum: "7", correct: "5", unit: "小時" },
-            { type: "【時間換算】", quest: "一整天 24 小時，換算成分鐘是 240 分鐘！", wrongNum: "240", correct: "1440", unit: "分鐘" },
-            { type: "【時間換算】", quest: "360 秒換算成分鐘，應該是 3.6 分鐘！", wrongNum: "3.6", correct: "6", unit: "分鐘" },
-            { type: "【時間換算】", quest: "1 小時 20 分鐘，等於 120 分鐘！", wrongNum: "120", correct: "80", unit: "分鐘" },
-            { type: "【時間換算】", quest: "下午 4 點用 24 小時制看是 14 點！", wrongNum: "14", correct: "16", unit: "時" },
-            { type: "【時間換算】", quest: "200 分鐘是 2 小時 0 分鐘！", wrongNum: "2", correct: "3", unit: "小時" },
-            { type: "【時間換算】", quest: "5 分鐘等於 500 秒，這一定沒錯！", wrongNum: "500", correct: "300", unit: "秒" }
+        stage5: [
+            { type: "【時間換算】", quest: "3 小時等於 (　) 分鐘", correct: "180" },
+            { type: "【時間換算】", quest: "2 分鐘 15 秒等於 (　) 秒", correct: "135" },
+            { type: "【時間換算】", quest: "180 分鐘等於 (　) 小時", correct: "3" },
+            { type: "【時間換算】", quest: "從早上 9 點到下午 2 點經過 (　) 小時", correct: "5" },
+            { type: "【時間換算】", quest: "一整天 24 小時等於 (　) 分鐘", correct: "1440" },
+            { type: "【時間換算】", quest: "360 秒等於 (　) 分鐘", correct: "6" },
+            { type: "【時間換算】", quest: "1 小時 20 分鐘等於 (　) 分鐘", correct: "80" },
+            { type: "【時間換算】", quest: "下午 4 點是 24 小時制的 (　) 點", correct: "16" },
+            { type: "【時間換算】", quest: "200 分鐘是 (　) 小時又 20 分", correct: "3" },
+            { type: "【時間換算】", quest: "5 分鐘等於 (　) 秒", correct: "300" }
         ]
     };
 
@@ -239,7 +238,7 @@
     let timer;
 
     function startGame() {
-        // 從每一階段隨機抽一題
+        // 從各階段隨機抽 1 題，組成 5 題任務
         gameQuestions = [
             fullBank.stage1[Math.floor(Math.random() * 10)],
             fullBank.stage2[Math.floor(Math.random() * 10)],
@@ -260,12 +259,15 @@
 
         const q = gameQuestions[currentIdx];
         document.getElementById('quest-type').innerText = q.type;
-        document.getElementById('ai-quest').innerText = `🤖 ${q.quest}`;
-        document.getElementById('unit-tag').innerText = q.unit;
+        
+        // 挖空邏輯：將題目以 (　) 拆分
+        const parts = q.quest.split("(　)");
+        document.getElementById('quest-prefix').innerText = `🤖 ${parts[0]}`;
+        document.getElementById('quest-suffix').innerText = parts[1] || "";
         
         const input = document.getElementById('user-input');
         input.value = "";
-        input.focus();
+        input.focus(); // 自動聚焦，方便直接輸入
         document.getElementById('feedback').innerText = "";
         
         timeLeft = 100;
@@ -274,7 +276,7 @@
             timeLeft -= 1;
             document.getElementById('timer-bar').style.width = timeLeft + "%";
             if (timeLeft <= 0) checkAnswer(true);
-        }, 300); // 30秒
+        }, 300); // 30秒限時
     }
 
     function checkAnswer(timeout = false) {
@@ -283,39 +285,42 @@
         clearInterval(timer);
         const q = gameQuestions[currentIdx];
         const val = document.getElementById('user-input').value.trim();
-        const isRight = (val === q.correct);
+        
+        // 數值比對 (容許字串與數字比對)
+        const isRight = (val !== "" && parseFloat(val) === parseFloat(q.correct));
         
         if (isRight) score++;
 
         history.push({
             type: q.type,
-            wrong: q.wrongNum,
-            user: val || "沒填寫",
+            user: val || "未填寫",
             correct: q.correct,
             status: isRight ? "✅ 正確" : (timeout ? "⏰ 逾時" : "❌ 錯誤")
         });
 
         const feedback = document.getElementById('feedback');
         feedback.innerHTML = isRight ? 
-            `<span style="color:var(--success)">🎉 修復成功！</span>` : 
-            `<span style="color:var(--error)">⚡ 錯誤！正確是 ${q.correct}</span>`;
+            `<span style="color:var(--success)">🎉 太棒了！修復成功</span>` : 
+            `<span style="color:var(--error)">⚡ 能源不穩！正確是 ${q.correct}</span>`;
 
+        // 鎖定輸入避免重複送出
         document.getElementById('user-input').blur();
+        
         setTimeout(() => {
             currentIdx++;
             loadQuestion();
-        }, 2000);
+        }, 1500);
     }
 
     function showEndScreen() {
         showScreen('end-screen');
-        document.getElementById('final-score').innerText = `修復評分：${(score/gameQuestions.length)*100} 分`;
+        const finalPercent = (score / gameQuestions.length) * 100;
+        document.getElementById('final-score').innerText = `任務完成度：${finalPercent} %`;
         
         let html = "";
         history.forEach(h => {
             html += `<tr>
                 <td>${h.type}</td>
-                <td style="text-decoration:line-through; color:#999">${h.wrong}</td>
                 <td style="font-weight:bold">${h.user}</td>
                 <td style="color:var(--secondary); font-weight:bold">${h.correct}</td>
                 <td class="${h.status === '✅ 正確' ? 'tag-correct' : 'tag-wrong'}">${h.status}</td>
